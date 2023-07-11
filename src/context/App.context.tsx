@@ -1,23 +1,27 @@
-import { createContext, useState } from 'react'
+import { createContext, useReducer } from 'react'
 import { IChildren } from '../interfaces/base'
-import { IAppContext, IUser } from '../interfaces/context'
+import { IAuthState, IContextProps } from '../interfaces/context'
+import { authReducer } from './Auth/authReducer'
 
-const DEFAULT_CONTEXT_VALUES:IAppContext = {
-  userLogged: {
-    id: '',
-    email: '',
-    name: ''
-  },
-  setUserLogged: () => {}
+const initialState: IAuthState = {
+  isLoggedIn: false,
+  user: undefined
 }
 
-export const AppContext = createContext<IAppContext>(DEFAULT_CONTEXT_VALUES)
+export const AppContext = createContext({} as IContextProps)
 
 export default function AppProvider ({ children }: IChildren) {
-  const [userLogged, setUserLogged] = useState<IUser>(DEFAULT_CONTEXT_VALUES.userLogged)
+  const [state, dispatch] = useReducer(authReducer, initialState)
 
+  const signIn = () => {
+    dispatch({ type: 'signIn' })
+  }
   return (
-    <AppContext.Provider value={{ userLogged, setUserLogged }}>
+    <AppContext.Provider value={{
+      authState: state,
+      signIn
+    }}
+    >
       {children}
     </AppContext.Provider>
   )
