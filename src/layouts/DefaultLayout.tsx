@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom'
 const DefaultLayout = () => {
   return (
-    <main>
+    <main className=' bg-neutral-900'>
       <Outlet />
     </main>
   )
