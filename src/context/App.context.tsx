@@ -1,6 +1,6 @@
 import { createContext, useReducer } from 'react'
 import { IChildren } from '../interfaces/base'
-import { IAuthState, IContextProps } from '../interfaces/context'
+import { IAuthState, IContextProps, IUser } from '../interfaces/contextInterfaces'
 import { authReducer } from './Auth/authReducer'
 
 const initialState: IAuthState = {
@@ -11,15 +11,20 @@ const initialState: IAuthState = {
 export const AppContext = createContext({} as IContextProps)
 
 export default function AppProvider ({ children }: IChildren) {
-  const [state, dispatch] = useReducer(authReducer, initialState)
+  const [authState, authDispatch] = useReducer(authReducer, initialState)
 
-  const signIn = () => {
-    dispatch({ type: 'signIn' })
+  const signIn = (user:IUser) => {
+    authDispatch({ type: 'signIn', payload: user })
   }
+  const logout = () => {
+    authDispatch({ type: 'logout' })
+  }
+
   return (
     <AppContext.Provider value={{
-      authState: state,
-      signIn
+      authState,
+      signIn,
+      logout
     }}
     >
       {children}

@@ -1,20 +1,26 @@
 import { createBrowserRouter } from 'react-router-dom'
-import DefaultLayout from '../layouts/DefaultLayout'
+import LogintLayout from '../layouts/LoginLayout'
 import Home from '../pages/Home'
 import Room from '../pages/Room'
+import RoomLayout from '../layouts/RoomLayout'
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <DefaultLayout />,
+    element: <LogintLayout />,
     children: [
       {
         index: true,
         element: <Home />
-      }, {
-        path: '/room',
-        element: <Room />
       }
     ]
+  },
+  {
+    path: '/room',
+    element: <RoomLayout />,
+    children: [{
+      index: true,
+      element: <Room />
+    }]
   }
 ])

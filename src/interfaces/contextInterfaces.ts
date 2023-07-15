@@ -1,7 +1,6 @@
 export interface IUser {
   id: string
-  name: string
-  email: string
+  username: string
 }
 export interface IAuthState {
   isLoggedIn: boolean
@@ -10,5 +9,6 @@ export interface IAuthState {
 
 export interface IContextProps{
   authState: IAuthState
-  signIn: ()=>void
+  signIn: (user:IUser)=>void
+  logout: ()=>void
 }
