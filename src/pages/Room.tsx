@@ -1,100 +1,63 @@
-import { useContext, FormEvent } from 'react'
+import { useContext, FormEvent, useState, useRef } from 'react'
 import { AppContext } from '../context/App.context'
 import { io } from 'socket.io-client'
+import { IUser } from '../interfaces/contextInterfaces'
 
-const messages = [
-  {
-    message: 'Hello, how are you?',
-    user: 'Nahuel'
-  },
-  {
-    message: 'Hi, how have you been?',
-    user: 'YYYYY'
-  },
-  {
-    message: 'Hello, how are you?',
-    user: 'Nahuel'
-  },
-  {
-    message: 'Hi, how have you been?',
-    user: 'YYYYY'
-  },
-  {
-    message: 'Hello, how are you?',
-    user: 'Nahuel'
-  },
-  {
-    message: 'Hi, how have you been?',
-    user: 'YYYYY'
-  },
-  {
-    message: 'Hello, how are you?',
-    user: 'Nahuel'
-  },
-  {
-    message: 'Hi, how have you been?',
-    user: 'YYYYY'
-  },
-  {
-    message: 'Hello, how are you?',
-    user: 'Nahuel'
-  },
-  {
-    message: 'Hi, how have you been?',
-    user: 'YYYYY'
-  },
-  {
-    message: 'Hello, how are you?',
-    user: 'Nahuel'
-  },
-  {
-    message: 'Hi, how have you been?',
-    user: 'YYYYY'
-  },
-  {
-    message: 'Hello, how are you?',
-    user: 'Nahuel'
-  },
-  {
-    message: 'Hi, how have you been?',
-    user: 'YYYYY'
-  },
-  {
-    message: 'Hello, how are you?',
-    user: 'Nahuel'
-  },
-  {
-    message: 'Hi, how have you been?',
-    user: 'YYYYY'
-  }
-]
+interface Message {
+  message: string,
+  user: IUser
+}
 const Room = () => {
   // const socket = io('http://localhost:3000')
+
+  const messageContainer = useRef<HTMLDivElement>(null)
 
   const { authState } = useContext(AppContext)
 
   const { user } = authState
 
+  const [messages, setMessages] = useState<Message[]>(
+    [
+      {
+        message: 'Hola People este es eun mensaje de prueba de un usuario random',
+        user: {
+          username: 'Random',
+          id: 'asdasd'
+        }
+
+      }
+    ]
+  )
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log('submit')
+
+    setMessages([...messages, { message: e.currentTarget.message.value, user: user as IUser }])
+
+    // console.log(messageContainer.current?.scrollHeight)
+    // TODO: fix scroll
+    messageContainer.current?.scroll({
+      top: messageContainer.current.scrollHeight,
+      behavior: 'smooth'
+    })
+    e.currentTarget.message.value = ''
   }
   return (
     <main className='container grid grid-rows-[1fr_auto] gap-4 p-4 mx-auto '>
-      <div className='w-full max-w-4xl max-h-[calc(100vh-220px)] p-4 mx-auto overflow-y-scroll rounded-md bg-slate-200'>
+      <div ref={messageContainer} className='w-full max-w-4xl max-h-[calc(100vh-230px)] grid auto-rows-min p-4 mx-auto overflow-y-scroll rounded-md bg-slate-100'>
 
         {
           messages.map((message, index) => (
-            <div key={index} className={`${message.user === user?.username ? 'text-right' : 'text-left'}  text-lg font-medium p-2 my-1`}>
-              <p>
+            <div key={index} className={`${message.user.username === user?.username ? 'justify-self-end' : 'justify-self-start'}  text-lg font-medium p-2 my-1 rounded-md  flex flex-col max-w-lg bg-gray-200`}>
+              <p className='text-gray-700 break-words'>
                 {message.message}
               </p>
-              <span className='text-xs text-gray-500'>{message.user === user?.username ? 'You' : message.user}</span>
+              <span className={`${message.user.username === user?.username ? 'text-end' : 'text-start'} text-xs text-gray-500 `}>{message.user.username === user?.username ? 'You' : message.user.username}</span>
             </div>))
         }
       </div>
       <form className='flex w-full max-w-4xl mx-auto my-4' onSubmit={handleSubmit}>
-        <input type='text' placeholder='Type your message' className='w-full px-4 py-2 rounded-s-md' />
+        <input multiple type='text' name='message' placeholder='Type your message' className='w-full px-4 py-2 rounded-s-md' />
         <button type='submit' className='p-4 text-white bg-blue-500 rounded-e-md'>Send</button>
       </form>
     </main>
