@@ -9,6 +9,6 @@ export interface IAuthState {
 
 export interface IContextProps{
   authState: IAuthState
-  signIn: (user:IUser)=>void
-  logout: ()=>void
+  signIn: (user: IUser) => void
+  logout: () => void
 }
