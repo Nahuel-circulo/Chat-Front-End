@@ -1,4 +1,4 @@
-import { useContext, FormEvent, useState, useRef } from 'react'
+import { useContext, FormEvent, useState, useRef, useEffect } from 'react'
 import { AppContext } from '../context/App.context'
 import { io } from 'socket.io-client'
 import { IUser } from '../interfaces/contextInterfaces'
@@ -10,7 +10,7 @@ interface Message {
 const Room = () => {
   // const socket = io('http://localhost:3000')
 
-  const messageContainer = useRef<HTMLDivElement>(null)
+  const lastElementRef = useRef<HTMLDivElement>(null)
 
   const { authState } = useContext(AppContext)
 
@@ -24,27 +24,22 @@ const Room = () => {
           username: 'Random',
           id: 'asdasd'
         }
-
       }
     ]
   )
 
+  useEffect(() => {
+    lastElementRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
     setMessages([...messages, { message: e.currentTarget.message.value, user: user as IUser }])
-
-    // console.log(messageContainer.current?.scrollHeight)
-    // TODO: fix scroll
-    messageContainer.current?.scroll({
-      top: messageContainer.current.scrollHeight,
-      behavior: 'smooth'
-    })
     e.currentTarget.message.value = ''
   }
   return (
     <main className='container grid grid-rows-[1fr_auto] gap-4 p-4 mx-auto '>
-      <div ref={messageContainer} className='w-full max-w-4xl max-h-[calc(100vh-230px)] grid auto-rows-min p-4 mx-auto overflow-y-scroll rounded-md bg-slate-100'>
+      <div className='w-full max-w-4xl max-h-[calc(100vh-230px)] grid auto-rows-min p-4 mx-auto overflow-y-scroll rounded-md bg-slate-100'>
 
         {
           messages.map((message, index) => (
@@ -55,6 +50,7 @@ const Room = () => {
               <span className={`${message.user.username === user?.username ? 'text-end' : 'text-start'} text-xs text-gray-500 `}>{message.user.username === user?.username ? 'You' : message.user.username}</span>
             </div>))
         }
+        <div ref={lastElementRef} className='h-2' />
       </div>
       <form className='flex w-full max-w-4xl mx-auto my-4' onSubmit={handleSubmit}>
         <input multiple type='text' name='message' placeholder='Type your message' className='w-full px-4 py-2 rounded-s-md' />
