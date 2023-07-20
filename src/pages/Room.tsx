@@ -34,8 +34,10 @@ const Room = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setMessages([...messages, { message: e.currentTarget.message.value, user: user as IUser }])
-    e.currentTarget.message.value = ''
+    if (e.currentTarget.message.value.trim() !== '') {
+      setMessages([...messages, { message: e.currentTarget.message.value, user: user as IUser }])
+      e.currentTarget.message.value = ''
+    }
   }
   return (
     <main className='container grid grid-rows-[1fr_auto] gap-4 p-4 mx-auto '>
