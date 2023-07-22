@@ -2,8 +2,6 @@ import { FormEvent, useContext, useState } from 'react'
 import { AppContext } from '../context/App.context'
 import { v4 as uuidv4 } from 'uuid'
 import { useNavigate } from 'react-router-dom'
-import useLocalStorage from '../hooks/useLocalStorage'
-import { IUser } from '../interfaces/contextInterfaces'
 
 const LoginForm = () => {
   const { signIn } = useContext(AppContext)
