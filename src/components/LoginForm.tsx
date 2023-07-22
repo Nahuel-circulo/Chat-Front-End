@@ -10,13 +10,10 @@ const LoginForm = () => {
   const [username, setUsername] = useState('')
   const navigate = useNavigate()
 
-  const [userStored, setUserStored] = useLocalStorage('username', {} as IUser)
-
   const login = (e: FormEvent) => {
     e.preventDefault()
     const user = { username, id: uuidv4() }
     signIn(user)
-    setUserStored(user)
     navigate('/room')
   }
 
