@@ -12,3 +12,9 @@ export interface IContextProps{
   signIn: (user: IUser) => void
   logout: () => void
 }
+
+export interface IMessage {
+  message: string,
+  user: IUser,
+  date: Date
+}

@@ -1,44 +1,28 @@
-import { useContext, FormEvent, useState, useRef, useEffect } from 'react'
-import { AppContext } from '../context/App.context'
-import { io } from 'socket.io-client'
-import { IUser } from '../interfaces/contextInterfaces'
+import { useRef, useEffect } from 'react'
 
-interface Message {
-  message: string,
-  user: IUser
-}
+import { io } from 'socket.io-client'
+import useMessages from '../hooks/useMessages'
+
 const Room = () => {
   // const socket = io('http://localhost:3000')
 
   const lastElementRef = useRef<HTMLDivElement>(null)
 
-  const { authState } = useContext(AppContext)
-
-  const { user } = authState
-
-  const [messages, setMessages] = useState<Message[]>(
-    [
-      {
-        message: 'Hola People este es eun mensaje de prueba de un usuario random',
-        user: {
-          username: 'Random',
-          id: 'asdasd'
-        }
-      }
-    ]
-  )
+  const [user, messages, handleSubmit] = useMessages([
+    {
+      message: 'Hola People este es eun mensaje de prueba de un usuario random',
+      user: {
+        username: 'Random',
+        id: 'asdasd'
+      },
+      date: new Date()
+    }
+  ])
 
   useEffect(() => {
     lastElementRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (e.currentTarget.message.value.trim() !== '') {
-      setMessages([...messages, { message: e.currentTarget.message.value, user: user as IUser }])
-      e.currentTarget.message.value = ''
-    }
-  }
   return (
     <main className='container grid grid-rows-[1fr_auto] gap-4 p-4 mx-auto '>
       <div className='w-full max-w-4xl max-h-[calc(100vh-230px)] grid auto-rows-min p-4 mx-auto overflow-y-scroll rounded-md bg-slate-100'>
@@ -49,7 +33,7 @@ const Room = () => {
               <p className='text-gray-700 break-words'>
                 {message.message}
               </p>
-              <span className={`${message.user.username === user?.username ? 'text-end' : 'text-start'} text-xs text-gray-500 `}>{message.user.username === user?.username ? 'You' : message.user.username}</span>
+              <span className={`${message.user.username === user?.username ? 'text-end' : 'text-start'} text-xs text-gray-500 `}>{message.user.username === user?.username ? 'You' : message.user.username} {message.date.toLocaleTimeString()}</span>
             </div>))
         }
         <div ref={lastElementRef} className='h-2' />

@@ -35,5 +35,9 @@
   },
   "eslintConfig": {
     "extends": "./node_modules/standard/eslintrc.json"
+  },
+  "volta": {
+    "node": "18.17.0",
+    "yarn": "1.22.19"
   }
 }
